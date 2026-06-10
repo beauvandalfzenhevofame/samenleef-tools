@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SamenLeefKompas</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F5F4F0;color:#2C2C2A;padding:20px}
+.card{background:#fff;border-radius:14px;border:1px solid #E0DED8;padding:24px;max-width:1020px;margin:0 auto}
+.header{text-align:center;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #E0DED8}
+.header h1{font-size:24px;font-weight:700;color:#1A1A18;margin-bottom:3px}
+.header .sub{font-size:12px;color:#5F5E5A}
+.header .credit{font-size:10px;color:#999;font-style:italic}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.mf label{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;display:block;margin-bottom:3px}
+.mf input{width:100%;padding:6px 8px;font-size:12px;border:1px solid #D3D1C7;border-radius:6px;background:#FAFAF8;color:#2C2C2A}
+.concept-lbl{font-size:10px;font-weight:700;color:#5F5E5A;text-transform:uppercase;margin-bottom:6px;display:block}
+.concept-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.cc{border:1.5px solid #E0DED8;border-radius:9px;padding:8px 10px;cursor:pointer;background:#FAFAF8}
+.cc:hover{border-color:#F5D9A8}
+.cc .ct{font-size:11px;font-weight:600;color:#2C2C2A;margin-bottom:2px}
+.cc .cs{font-size:9px;color:#888;line-height:1.4}
+.cc.sel-b{border-color:#E87722;background:#FDF0E2}.sel-b .ct{color:#7A3200}
+.cc.sel-g{border-color:#1A1A1A;background:#E8E8E8}.sel-g .ct{color:#1A1A1A}
+.cc.sel-p{border-color:#D4A96A;background:#FDF6E3}.sel-p .ct{color:#7A4A00}
+.cc.sel-o{border-color:#C05A10;background:#FDF0E6}.sel-o .ct{color:#7A3208}
+.aandacht{display:none;padding:8px 12px;border-radius:7px;font-size:10px;line-height:1.6;margin-bottom:12px;border:1px solid}
+.aan-b{background:#FDF0E2;border-color:#E8B87A;color:#7A3200}
+.aan-g{background:#E8E8E8;border-color:#1A1A1A;color:#1A1A1A}
+.aan-p{background:#FDF6E3;border-color:#D4A96A;color:#7A4A00}
+.aan-o{background:#FDF0E6;border-color:#E8A06A;color:#7A3208}
+.aandacht b{display:block;margin-bottom:2px;font-size:11px}
+.main-grid{display:grid;grid-template-columns:310px 1fr;gap:20px}
+.canvas-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.legenda{display:flex;gap:10px;font-size:10px;flex-wrap:wrap;justify-content:center}
+.leg{display:flex;align-items:center;gap:4px}
+.dot{width:9px;height:9px;border-radius:50%}
+.pills{width:100%;display:flex;flex-direction:column;gap:3px}
+.pill{display:flex;justify-content:space-between;padding:5px 9px;border-radius:7px;font-size:11px}
+.pl{background:#FDF0E2;color:#7A3200}
+.pb{background:#E8E8E8;color:#1A1A1A}
+.pf{background:#FDF6E3;color:#7A4A00}
+.pill strong{font-weight:700}
+.hint{font-size:10px;color:#888;margin-bottom:8px}
+.stap{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;margin:10px 0 7px}
+.s1{background:#FDF0E2;color:#7A3200}.s2{background:#E8E8E8;color:#1A1A1A}.s3{background:#FDF6E3;color:#7A4A00}
+.nr{width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.s1 .nr{background:#7A3200;color:#fff}.s2 .nr{background:#1A1A1A;color:#fff}.s3 .nr{background:#7A4A00;color:#fff}
+.gng{padding:6px 10px;border-radius:7px;font-size:11px;font-weight:600;margin:4px 0 7px;display:none;border:1px solid}
+.go{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.nogo{background:#FCEBEB;color:#501313;border-color:#F09595}
+.maybe{background:#FAEEDA;color:#412402;border-color:#EF9F27}
+.nogo-btn{display:none;margin-bottom:8px}
+.nogo-btn button{font-size:10px;padding:5px 12px;border-radius:6px;border:1px solid #D3D1C7;background:#fff;cursor:pointer;color:#5F5E5A}
+.sr{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.sl{font-size:11px;font-weight:500;min-width:164px;display:flex;align-items:center;gap:3px}
+.hl{font-size:8px;padding:1px 4px;border-radius:8px;font-weight:700}
+.hl-b{background:#FDF0E2;color:#7A3200}.hl-g{background:#E8E8E8;color:#1A1A1A}.hl-p{background:#FDF6E3;color:#7A4A00}.hl-o{background:#FDF0E6;color:#7A3208}
+input[type=range]{flex:1;height:4px;cursor:pointer}
+.sv{font-size:11px;font-weight:700;min-width:22px;text-align:center;background:#F0F0EC;border-radius:4px;padding:2px 4px}
+.cloc{color:#E87722}.cbouw{color:#1A1A1A}.cfin{color:#D4A96A}
+.ibtn{background:none;border:none;cursor:pointer;font-size:13px;color:#B0AEA8;padding:0;line-height:1}
+.ibtn:hover{color:#7A3200}
+.veilig-row{display:flex;align-items:center;gap:8px;margin:3px 0 7px;padding:7px 10px;background:#FFF8E6;border:1px solid #F0D080;border-radius:7px;font-size:10px}
+.veilig-row label{cursor:pointer;font-weight:500;color:#5A4500}
+.warn{display:none;padding:6px 10px;border-radius:7px;font-size:10px;font-weight:600;background:#FAEEDA;color:#412402;border:1px solid #EF9F27;margin:3px 0 6px}
+.veto-warn{display:none;padding:6px 10px;border-radius:7px;font-size:10px;font-weight:600;background:#FCEBEB;color:#501313;border:1px solid #F09595;margin:3px 0 6px}
+.rbox{background:#F9F8F5;border:1px solid #E0DED8;border-radius:10px;padding:12px 14px;margin-top:10px}
+.rtitle{font-size:10px;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:7px}
+.rr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #ECE9E3;font-size:11px}
+.rr:last-of-type{border-bottom:none}
+.rl{color:#5F5E5A}.rv{font-weight:600}
+.ea{margin-top:8px;padding:9px 12px;border-radius:9px;text-align:center;font-size:12px;font-weight:700;display:none;border:1px solid transparent}
+.ea-green{background:#EAF3DE;color:#27500A;border-color:#97C459}
+.ea-blue{background:#FDF0E2;color:#7A3200;border-color:#E8B87A}
+.ea-amber{background:#FAEEDA;color:#412402;border-color:#EF9F27}
+.ea-red{background:#FCEBEB;color:#501313;border-color:#F09595}
+.btn-row{display:flex;gap:7px;margin-top:10px}
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid}
+.btn-sec{background:#fff;border-color:#D3D1C7;color:#5F5E5A}
+.btn-prim{background:#E87722;border-color:#E87722;color:#fff}
+.footer{text-align:center;margin-top:14px;font-size:9px;color:#C0BEB8;font-style:italic}
+.rpo-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.rpo-label{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.05em;margin-right:4px}
+.rpo-btn{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid #D3D1C7;background:#FAFAF8;color:#5F5E5A;transition:all .14s}
+.rpo-btn:hover{border-color:#E87722;color:#7A3200}
+.rpo-btn.active{background:#FDF0E2;border-color:#E87722;color:#7A3200;font-weight:600}
+.rpo-banner{display:none;padding:9px 13px;border-radius:8px;font-size:10px;line-height:1.6;margin-bottom:12px;border:1px solid #E8B87A;background:#FDF0E2;color:#7A3200}
+.rpo-banner b{display:block;margin-bottom:3px;font-size:11px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:20px;max-width:440px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal h3{font-size:14px;font-weight:600;margin-bottom:10px;padding-right:24px}
+.modal .vraag{background:#F5F4F0;border-radius:7px;padding:9px 11px;font-size:11px;color:#2C2C2A;margin-bottom:10px;line-height:1.6;border-left:3px solid #E87722;white-space:pre-line}
+.modal .toel{font-size:11px;color:#5F5E5A;line-height:1.6;margin-bottom:8px}
+.modal .bron{font-size:10px;color:#888;font-style:italic;margin-bottom:10px}
+.modal .links-title{font-size:10px;font-weight:700;color:#5F5E5A;text-transform:uppercase;margin-bottom:5px}
+.modal .links{display:flex;flex-direction:column;gap:4px}
+.modal .links a{font-size:11px;color:#E87722;text-decoration:none;padding:4px 8px;border-radius:5px;background:#FDF6EC}
+.modal .links a:hover{background:#FAF0DC}
+.mclose{position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;font-size:18px;color:#888}
+@media(max-width:720px){.main-grid{grid-template-columns:1fr}.meta-grid{grid-template-columns:repeat(2,1fr)}.concept-grid{grid-template-columns:repeat(2,1fr)}}
+@media print{.btn-row,.ibtn,.modal-overlay,.nogo-btn{display:none!important}.aandacht,.gng{display:block!important}}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="header">
+  <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:4px">
+    <div style="font-size:26px">🧭</div>
+    <h1>SamenLeefKompas</h1>
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QBMRXhpZgAATU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAABSaADAAQAAAABAAAAmQAAAAD/7QA4UGhvdG9zaG9wIDMuMAA4QklNBAQAAAAAAAA4QklNBCUAAAAAABDUHYzZjwCyBOmACZjs+EJ+/8AAEQgAmQFJAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/bAEMAAQEBAQEBAgEBAgMCAgIDBAMDAwMEBgQEBAQEBgcGBgYGBgYHBwcHBwcHBwgICAgICAkJCQkJCwsLCwsLCwsLC//bAEMBAgICAwMDBQMDBQsIBggLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLC//dAAQAFf/aAAwDAQACEQMRAD8A/v082L++Pz/+vR5sX98fn/8AXr8HvMk/vH86PMk/vH86+O/1tX/Pn/yb/wC1Pb/shfz/AIf8E/eRWVhlTn6UtfLX7IJLfCVixyft8/8AJa+pa+pwlf29GFa1uZXseTWp+zqShfYQkKMscCmebF/fH5//AF6+cP2sSR8G7oj/AJ+bf/0MV+VvmSf3j+dePmme/U6ypez5tL727+TO3C5f7aHPzW+X/BP3h82L++Pz/wDr1JX4MPJJsPzHp61+7Omf8g23/wCuSfyFbZTm/wBdc1ycvLbrfe/kuxnjMH7BRfNe/kXqYZIgcFh+dPr8aPjVJJ/wtvxF8x/4/pe/vWua5n9Spxnyc13be36MjB4X28mr2sfsn5sX98fn/wDXo82L++Pz/wDr1+D3mSf3j+dHmSf3j+deH/rav+fP/k3/ANqeh/ZC/n/D/gn7w+bF/fH5/wD16PNi/vj8/wD69fg95kn94/nR5kn94/nR/rav+fP/AJN/9qH9kL+f8P8Agn7yKysMqc/Slr5X/Y/yfhPLn/n/AJv/AEFK+qK+pwmI9vRhWtbmV7Hk1qfs5uF9j85/21P+Rv0X/rzk/wDQ69z/AGRPEP8Aa3wrOkSNl9LupYQO+yTEgP0yzAfSvDP21P8Akb9F/wCvOT/0Om/sX+IjaeLtV8MSNhL21WdQf78DYwPchyfwr5SlX9nnc10lp+C/VI9edPmwK8tfxP0ar4J/bX0MBtB8Sxrz++tZD/3y6D/0Kvvavmr9rDQ/7W+D9xeqMtp1xDcD1wW8s/o+fwr386o+0wVWPZX+7X9DzsDPlrxfy+/Q/KyvSPg9o3/CQfFPQNLK7la9ikYeqxHzG/RTXm9fUX7ImijU/iz/AGi4yNOs5pgfRnxGP0dq/O8vpe0xNKHdr89T6PET5aUpeTP1Gooor9YPkQooooAKRmCgsxwBySa8F+Mvx88O/CiD+zo1F/rEq7o7ZWwEB6NIf4R6DqfYcj82vHXxa8f/ABEuHfxLqDtAx4toiY4FHoEBwfq2T714eY57Qwr5F70+y6erO/DYCpVXM9Efq5q3xc+GGhSGHVNfsY5FOCgnVnGPVVJI/Kudi/aG+DEz+WviC3B/2g6j8yuK/H0ADgUV4EuK69/dpxt8/wDM9BZTT6yZ+3+heOPBnic7PDmrWl83UrBMjsPqAcj8RXU1+DCsyOJEOGU5BHUEV9A/Dn9pL4i+A50gvbhtY0/I3W905ZgP9iQ5Zfody+1d2F4qhJqNeFvNa/hv+ZhVylpXpyv6n6zUVwnw9+Ivhn4maCuveGptwGFlibiSF8fdcfyPQ9ia7uvqqdSNSKnB3TPJlFxfLJahRRRVkhRRRQAUUUUAFFFFAH//0P6EKKKK/Gz7Q/UL9j//AJJI3/X/AD/yWvqavkX9kzXdE074VNb6heQQSfbpjtkkVTghecE19N/8JX4W/wCgla/9/k/xr9RyqpFYOkr9EfLYyL9vOy6nhX7WX/JGrv8A6+bf/wBDFflXX6f/ALU2vaHqHwhurawvYJ5DcW5CRyKzYDjsDmvzAr5DieSeLTX8q/NnsZWrUde7/Qa/3D9K/dzTP+Qbb/8AXJP5Cvwjf7h+lfu5pn/INt/+uSfyFd/CW9b/ALd/UwzfaHz/AEL1fjJ8amA+LfiPJx/p8v8AOv2brDn8MeGrqZrm6062kkc5ZmhQsSe5JHNe7m+WvG04wUrWd9rnn4PFKhJtq9z8Md6+oo3r6iv3I/4RDwn/ANAu0/78J/8AE0f8Ih4T/wCgXaf9+E/+JrwP9U5/8/V93/BPR/teP8n4/wDAPw33r6ijevqK/cj/AIRDwn/0C7T/AL8J/wDE0f8ACIeE/wDoF2n/AH4T/wCJo/1Tn/z9X3f8EP7Xj/J+P/APnn9j4g/CeQj/AJ/5v/QUr6oqnY6fYaZD9n02CO3jJ3bYlCLk98ACrlfWYPD+woQot3srHj1qntKkp9z85/21P+Rv0X/rzk/9Drwj4F+IP+Ea+LehakThHuRbvnptuAY+fpuz+Fe7/tqf8jfov/XnJ/6HXxlFLLBKs9uxSRCGVh1DDkH8DX59mtV08ynUW6af3WPosJFSw0Yvqn+p+8tcT8SdDbxL8P8AWtCRdz3NlMiD/b2nb/49itfwrrkXibwzp/iKHG2+topxjt5ihsfhmt+v0aSjVptdGvzPmk3GXmj8FgcjNff/AOxRopSx17xG44kkhtkP+4C7f+hLXxT440RfDfjPVvD8YwlleTQoP9lHIX9MV+mP7Kejf2V8HLO6IAa/nnuD/wB9eWP0QV8Bw7h28fr9lP8Ay/U+hzGovq+nW3+Z9H0UUV+hnzgV5d8YfiRbfC7wPceJGUSXLEQ2sbdHmfOM+ygFj7D1r1GvzR/bD8XSat4+tvCUTfudJgDMv/TafDHP0QJj6mvMzjGvDYWVSPxPRer/AMtzqwVD2tVRe27PlTVdU1HXNSn1jV5muLq5cySyOcszHqT/AJ4qhRV7TNMv9a1KDSNKiM9zdSLFFGvVnY4A/OvzDWT7tn1OiRRoyOlfqd8M/wBl/wABeEdNin8VW0Ws6mygytON0CN3VIz8pA9WBJ9s4r2W4+G3w7u7f7LcaDp7x4xtNtHgfT5eK+mo8LYiUOac1F9t/vPMnmtNO0U2fiZRX3f8ef2Y9K0rRp/Gnw3iaIWwMlzZZLL5Y5Z485IK9SuSCOmCMH4Qrw8dgKuEqezqr0fRndQrwqx5oHpHwq+JOrfC7xdB4isCz25IS7gHSaEnkf7w6qex9sg/slpmpWOs6dBq2mSCa3uY1lidejI4yCPqK/CWv03/AGQPFb618OZ/Dty+6TSLgog9IZvnXn/e3gegFfQcL46SqPCyej1Xr1+9fkedmtBOKqrdbn1jRRRX3B4QUUUUAFFFFABRRRQB/9H+hCiiivxs+0EKg9Rmk2L6Cp0gnkXdGjMPUDNP+yXf/PJ/++T/AIU7MLlYKB0GKWpXgnjXdIjKPUjFRUgGv9w/Sv3c0z/kG2//AFyT+Qr8I3+4fpX7uaZ/yDbf/rkn8hX2PCW9b/t39Tx832h8/wBC9X5//EL9qz4h+E/HOreGdOs9OeCwuXhjaSOUuVU8ZIlAz9AK/QCvxl+NP/JW/Ef/AF/y/wA69HiPFVaFGEqMrNv9DlyylCpOSmr6HtP/AA2Z8UP+fDS/+/U3/wAeo/4bM+KH/Phpf/fqb/49XyRRXyH9s43/AJ+s9n6lQ/kR9b/8NmfFD/nw0v8A79Tf/HqP+GzPih/z4aX/AN+pv/j1fJFFH9s43/n6w+pUP5Efr/8AAb4ja58UfBD+JfEEUEM63UkIW3VlTagUjhmY559a9pr5X/Y//wCSTyf9f83/AKClfVFfoeW1JVMLTnN3bSPm8VFRqyjHa5+c/wC2p/yN+i/9ecn/AKHXxfX2h+2p/wAjfov/AF5yf+h18X1+f55/v1X1/RH0eB/gQ/rqfqv+yn4hOufCC1s5DmTTJ5bVvXAO9fyVwB9K+ka/Pj9ivxD5Osa34UkPE8Ud1GPeM7H/ADDL+VfoPX3OS1/a4KnLqlb7tDwMdT5K8l8/vPyf/an0U6N8Y7+4C7Uv4YbpfxXYfzZCa/Sz4caJ/wAI34A0XQmXa9rZQI46fOEG4/i2TXyz+1J4L/t/x/4MmRSRqFwNPlYDopkQj9Gc/hX20AAMCuTLMJ7PHYqfmrfP3n+htiq3NQpL+tNAorlvFOvDQ10+MHEl/fQWqf8AAiWb/wAcVq6mveUk24roee07XCvxm+NeoS6n8W/EVzN1W+li/CE+WP0UV+zNfjH8Z7OSw+LPiK3lGCb+aTn0lYuP0avl+K7+wp9r/oerlH8SXoeZ19S/sh6FBqvxWbUbgZ/s6zlmT/fYrH/6C7V8tV9U/sgazb6d8VJNOuGCm/spYo893Rlkx/3yrH8K+Wyjl+u0ubuv+B+J6uLv7Gdux+n9FFFfqZ8oNZVdSjgFSMEHkEV+IHjbRYvDnjLVtAgGI7K8ngTv8qOQP0FfuAzBQWY4A5JNfiD451mHxF411fXrY5ivb2eZD/sO5K/oRXyPFnLyUu93+l/0PYyi/NPtoctX2j+xXqDxeLda0oH5Z7OOU/WJ8f8As9fF1fZX7Fti8njfV9SA+WGxERPvLIpH/oFfPZHf69St3/Rno47+BO5+j1FFFfp58sFFFFABRRRQAUUUUAf/0v6EKKKK/Gz7Q/UL9j//AJJI3/X/AD/yWvqavln9j/8A5JI3/X/P/Ja+pq/VMp/3Ol/hR8rjf48/U+a/2sv+SNXf/Xzb/wDoYr8q6/VT9rL/AJI1d/8AXzb/APoYr8q6+P4o/wB8X+Ffmz2cr/gfN/oNf7h+lfu5pn/INt/+uSfyFfhG/wBw/Sv3c0z/AJBtv/1yT+Qrt4S3rf8Abv6mGb7Q+f6F6vkHxl+yTpXi/wAVah4ok1ua3a/naYxrCrBS3bJPNfX1fkV8af8AgvF/wSV/Z3+K+v8AwO+M/wAZbDQvFXhe7ew1TT5dP1F3t7iPG5C0dqyNjI5ViPevqcVg6OIio1o3S9f0PIpV50m3B2PpL/hibR/+hhn/AO/C/wDxVH/DE2j/APQwz/8Afhf/AIqvh/8A4iSP+CJH/Re9L/8ABbqn/wAiUf8AESR/wRI/6L3pf/gt1T/5Eri/sHAf8+vxf+Z0f2hiP5/wX+R9wf8ADE2j/wDQwz/9+F/+Ko/4Ym0f/oYZ/wDvwv8A8VXw/wD8RJH/AARI/wCi96X/AOC3VP8A5Eo/4iSP+CJH/Re9L/8ABbqn/wAiUf2DgP8An1+L/wAw/tDEfz/gv8j9dfhN8NLf4U+Fm8MWt216rTvP5joEOXAGMAn0r06vlz9kj9tP9mH9u34Z3Pxj/ZN8WQeMvDVnqEulTX1vBPbot5Ckcjx7biOJyVSVDkLj5uuc4+o69OlSjTgqcFZLY5JzcpOUt2fnP+2p/wAjfov/AF5yf+h18X19oftqf8jfov8A15yf+h18X1+a55/v1X1/RH1GB/gQ/rqe3fs6eIf+Ec+MOjzO22O7ka0f388FVH/fe2v16r8IrC+uNLvoNTtDiW2kWVD6MhBH6iv3L0bVLbXNHtNasjuhvIY54z6rIoYfoa+i4Ur3pVKL6O/3/wDDHm5vD3oz+Rj+I/C1r4i1DR7+4xnSL37Yue58qSMD83B/Cuqoor6pQSba6nkNtpJnzP8AGHXv+Lt+APCyHg3sl4491Uoh/wDHnr6Yr8+/GPiD+3P2wtKtlbdHpssFouPZGdvyZyPwr9BK8zLq3tauIl2nb7kl+h14qHJCkvK/3sK/MX9r7wrJo/xKi8SIv7nWLdW3dvNgARh/3zsP41+nVePfHH4ZL8UvAs2jW21b+3Pn2btwPNUfdJ9HGV9iQe1Gc4J4nCyhH4lqvVf5q4sFXVKqpPbZn48Vq6HrepeG9Ztdf0aQw3VnIssTjnDL6juD0I7jiqV3aXVhdS2N9G0M8LtHJG42srKcEEHoQeDVevzJNxd1o0fUaNH63/DD9oTwJ8QtOiS7uotN1TAEtrO4TLf9M2bAcHsAdw7iva7rU9NsbU319cRQwAZ8x3Cpj6k4r8JSAeDTdi+gr6mjxVVjC1SmpPve34WZ5U8pg3eMrL7z9C/j/wDtJaD/AGHc+Cfh9cC8uLtGiuLuM5ijjbhlRv4mYcZHAB4Oen57UUV4WPx9XF1PaVfkuiO/D4eFGPLEK/S79jvwk+j+AbrxTcLiTV5/k94YMqP/AB8v+GK+DPhv8P8AWPiX4st/C+jgjed88uMrDCD8zn6dAO5IHev2Z0TRtP8AD2j2ug6Snl21nEkMS9cKgwOe59T3r3eF8E5VXiZLRaL1f+S/M4M1rpQVJbv8jUooor7k8E/zOP2pP+Dtn/gqj8Gv2m/iN8IfCdj4GfSvCvijWNHsmuNIuHmNvY3csMe9heKC2xBuIAyewrwn/iMi/wCCuP8A0D/AH/gmuf8A5Nr+fr9v3/k+741/9j74k/8AThPXyTQB/V3/AMRkX/BXH/oH+AP/AATXP/ybR/xGRf8ABXH/AKB/gD/wTXP/AMm1/KJRQB/V3/xGRf8ABXH/AKB/gD/wTXP/AMm0f8RkX/BXH/oH+AP/AATXP/ybX8olFAH/0/6EKK/ar/hVXwx/6F3Tf/AWP/4mj/hVXwx/6F3Tf/AWP/4mvh/9VKv/AD8X3M97+1ofys8X/Y//AOSSN/1/z/yWvqasnRtB0Tw7aHT9As4bKAsX8uBBGm49ThQBk1rV9fg6Do0IUm7tKx41eoqlSU11Pmv9rL/kjV3/ANfNv/6GK/Kuv3V1fRdH1+yOm67aw3luxDGKdBIhI5BwwI4rlP8AhVXwx/6F3Tf/AAFj/wDia8TN8jnjK6qxmlpb8zvwePjRp8jXU/FN/uH6V+7mmf8AINt/+uSfyFcefhT8MDwfDum/+Asf/wATXeKqooRAAoGABwAK3ybKZ4JzcpJ81vwv/mZ43GRrqKSta46v8XX/AILyf8pif2h/+xwvP5LX+0VX+Lr/AMF5P+UxP7Q//Y4Xn8lr3Tzz8kaKK+q/2XP2Hf2uP219Q1jSv2UPAGrePLjw/HDLqUelQiU2yXBYRl8kYDlGA+hoA+VKK/W7/hw3/wAFif8Ao3jxh/4Bj/4uj/hw3/wWJ/6N48Yf+AY/+LoA/u3/AODMz/lE94g/7KJq/wD6RafX9adfzV/8Grv7K37Rf7H/APwTf1z4VftPeDtS8EeIpfHOpX8dhqkXlTPazWlkqSgZOUZkdQfVT6V/SpQB+c/7an/I36L/ANecn/odfF9fqj8dPiT+zB4H1mwtPjzeada3s8LPai9iZ2MQbDbSFbjd1rw3/hoH/gnT/wBBfQv/AAHf/wCN1+c5z9Q+u1PbY6jCV9YynFSWi3Teh9dl+CzCeHhKjg6s49HGEmnr0aR8QV+tv7M3iH/hIPg7pYdt0ljvtH56eU3yj/vgrXzj/wANA/8ABOn/AKC+hf8AgO//AMbr6L+BXxP/AGfPHltqOmfAS/sruKyeOW8jso2RUeYFVZsqoywjI/4DXTw9XwMMWoUcdSqSkmuWM4uT66JO7tb7rmWa5fj44d1K+EqQirXlKEkl01bVtb/ee/UySRIo2llIVVBJJ6ACn1zHjTxF4Z8JeFNQ8SeNJ1ttJs4Hku5XBZEixhiwUE4x146V91UqRhBzm0kldt6JJdW+x8zThKclCCu3oktW32R+Wvwx1yTxN+0Pp3iKXIN/qkk+D2EhYgfgDiv1xr4o+HXxk/Yd8ReNdN0P4b6jo82uTy7bKO3gZZDIFJ+UlAAcA9xX2vXgcNyoSo1JUK8KqctXCSkr2Wja6nqZxQxFKpGGIoypu2ilFxdr72fQKKzNb1rR/DWjXfiLxFdQ2On6fDJc3NzcOI4oYYlLO7uxCqqqCWYkAAZNfn7/AMPfP+CU3/Ryfwx/8KrTf/kivojyD6A+Nv7OujfE4t4g0N1sNbCgGQj91OB0EgAJyOgcZOOCCMY/Nnxh4E8W+AtQ/s3xbYyWchJCMwzHJjujjKt+B4719Tf8PfP+CU3/AEcn8Mf/AAqtN/8Akiql7/wVt/4JManbNZ6j+0Z8LriF/vRyeKNMdT9QZyK8DMsgo4mTqQfLP8H6r9fzPQw2YTpLllqj43or2rVv29P+CIGtSGa6+OvwriY/8+/i2wgH5R3Sj9K5+P8AbT/4IdpJvb9oH4bOP7p8Z2WP0ugf1rwJcLYq+ko29X/keis1o9U/w/zPNSQOTXsPw4+Bvj/4lzRy6Xam109z817cArFt7le7n028Z6kda6Hw/wD8FEf+CKHhiRZtH+O3wnWRDlXl8UabM4PqGkuGI/OvUf8Ah75/wSm/6OT+GP8A4VWm/wDyRXbheFbO+Inddl/m/wDIwq5tpanH7/8AI+yvhf8ACzw18KdB/sfQlMk0uGublx+8mcdz6KP4VHA9yST6XX51f8PfP+CU3/Ryfwx/8KrTf/kij/h75/wSm/6OT+GP/hVab/8AJFfW0qUKcFCmrJdDx5zcm5Sep+itFc14M8Z+EPiN4Q0v4gfD/VLTW9C1u0hv9O1GwmW4tbu1uEDxTQyoSjxuhDKykhgQQcV0taEn+F7+37/yfd8a/wDsffEn/pwnr5Jr62/b9/5Pu+Nf/Y++JP8A04T18k0Af2k/8G3v/BCD9hP/AIKkfsaeMPjr+1EviFtc0Txpc6Dbf2TqK2kP2SGxsrhdyGJ8vvuHy2emBjiv6Ef+IPT/AII//wDPPxr/AODtf/kevzg/4NGP26v2K/2X/wDgnx498DftJfFrwf4B1q9+Id5f29h4h1q0025ltX03To1mSO4lRmjLxuoYDG5SM5Br+qj/AIe+f8Epv+jk/hj/AOFVpv8A8kUAfjt/xB6f8Ef/APnn41/8Ha//ACPR/wAQen/BH/8A55+Nf/B2v/yPX7E/8PfP+CU3/Ryfwx/8KrTf/kiv0L+3WX/PZP8Avof40Af/1P7+KKKKACiiigAooooAKKKKACv8XX/gvJ/ymJ/aH/7HC8/ktf7RVf4uv/BeT/lMT+0P/wBjhefyWgD8ka/ux/4Md/8AksX7Qv8A2BvD/wD6Pu6/hOr9dP8Agk5/wWR/aE/4JAeJvGnin4A+G/DviKfxxa2VreL4giuZEiSxeV0MX2a4tyCTKd24sOBjFAH+0JRX+ZT/AMRsP/BR3/omXw2/8BdU/wDljR/xGw/8FHf+iZfDb/wF1T/5Y0Af6a1Ffnn/AMEo/wBrrx/+3j/wT3+Gf7W/xS0/T9K1/wAa2FxdXlrpSSJZxvDdTQARLNJLIAVjBO52OSecV+hlAH4F/wDBYD/kp3g7/sF3H/o0V+Qdfr5/wWA/5Kd4O/7Bdx/6NFfkHX8A+L//ACV+P9Y/+m4H9peGn/JM4L/DL/0uQV/RV/wSc8B/8I9+z5qHja4jxN4i1WVkfHJt7RRCo/CQS/nX86jMFUseg5r+vz9mLwI/w0/Z78HeCp4/KuLPSrc3CelxKokm/wDIjNX2f0esp9vntfHSWlGm7f4ptJf+SqR8r42Zl7HJaWEi9as1/wCAxV3/AOTcp7rXL+N/C1j458Gat4L1MZt9Xs57OXIz8k6FD+hrpDNCsy27MBIwLBc8kLgEgegyM/UVJX9j1KcKkJU5q6as15M/lqnUlTnGpB2a1XyP5Sf2LdM1DRP2xvB2i6vGYbuz1WWCeM9UlijkV1/BgRX9W1fz93/gL/hXv/BWKy0+FNlvqOrjVIf9pb2B5HP/AH9Mg/Cv6BK/F/BHLJZdgsywE96WJnH/AMBjBX+e5+s+LuPjjsVl+MhtUoRl/wCBSk7fI+ef2uv+TUPif/2KWtf+kctf4Rtf7uX7XX/JqHxP/wCxS1r/ANI5a/wja/bD8jCiiigAooooAKKKKACiiigD/bj/AOCQf/KKb9mz/smPhX/0229forX51f8ABIP/AJRTfs2f9kx8K/8Aptt6/RWgD/C9/b9/5Pu+Nf8A2PviT/04T18k19bft+/8n3fGv/sffEn/AKcJ6+SaACivp74KfsSftnftKeF7jxv+zn8IvGvj/RbS6axn1Dw3oF9qtrFdIiSNC8trDIiyBJEYoSGCupxgivYf+HT3/BU3/o2n4q/+Ebq//wAi0AfEvgz/AJHDSf8Ar8g/9DFf72df4oXhn/glT/wVE0/xJp9/efs1/FVIYLmKR2/4QzWDhVYEnAtM9PSv9rvLf3H/AO+G/wAKmRUT/9X+/iiiigAooooAKKKKACiiigAr/F1/4Lyf8pif2h/+xwvP5LX+0VX+Lr/wXk/5TE/tD/8AY4Xn8loA/JGiiv6J/wDg3x/4I0fBn/gsL44+J3hX4xeLda8KReBrHTLu1fRlgZpmvpJ0YSeejjCiIYxjqc0AfzsUV/pSf8QSP7Ef/RYfHH/fqw/+MUf8QSP7Ef8A0WHxx/36sP8A4xQB+zv/AAbi/wDKE74Bf9ge+/8ATjd1+29fIn7Bv7IHhP8AYH/ZI8F/sieBtXvNd0nwTbT2ttfX6otzMs1xLcEuIwqZBlKjAHAHevrugD8C/wDgsB/yU7wd/wBgu4/9GivyDr9fP+CwH/JTvB3/AGC7j/0aK/IOv4B8X/8Akr8f6x/9NwP7S8NP+SZwX+GX/pcj1f4EeBz8SvjT4U8BlPMj1TVbWGZf+mG8NKfwjDH8K/sYVQoCqMAcACv5tv8Aglh4FHij9pr/AISiZN0XhvTbi6DEcCafECj6lZHP4V/SVX9AfR5yn2GRV8dJa1qll/hgrL/yZyPxbxvzL22bUMGnpShd/wCKbu/wUT5F+JnxM/4R/wDa/wDhl8PVm2prGm64JY/VtsMkRP8A34cD8a+uq/C/9rT4sJoP/BSvwNeLKFh8OnSrOcnogvJXMx/78zg1+6Ffo3CWerH4/N6N7ulX5fRKnCP/AKVGR8RxRk7wWCyura3tKN/Vuc5f+kyifmp+054B+y/tu/BX4o26cXk9xpU7ehgSSaIH3Ikk/Kv0rryn4o+A08ZXPhjVkj8yfw7rdtqUXOMDZJA5+gjmY49q9Wr2MoypYPGY+rFWVaoqnz9nCD/GLfzPKzXM/reEwVNvWlBwf/gcpL8JJfI+ef2uv+TUPif/ANilrX/pHLX+EbX+7l+11/yah8T/APsUta/9I5a/wja+gPCPUPgh4FsPij8aPCHwz1aaS2tfEWt6fpk0sWPMjju50iZlyCNwDEjIIzX+ip/xBI/sR/8ARYfHH/fqw/8AjFf58f7IX/J2Xwv/AOxt0T/0sir/AHcKAP8AKY/4OCv+CDfwE/4I/fC34ceOvg9411/xVc+NNVvrC5j1lbdUhS1hSRSnkRocksQckjFfy3V/oy/8HwH/ACbt8Bv+xj1f/wBJoq/zmqAP6BP+Dfr/AIJBfB//AIK/fGb4gfDT4weKtY8K23hDRbbU7ebR1gaSWSafyir+ejjaByMAHNf1Qf8AEEj+xH/0WHxx/wB+rD/4xX5o/wDBkP8A8nX/ABu/7FKw/wDSyv8ASCoA/wAJf9sf4K6J+zb+138VP2dfDN5PqGm+AfGGueHLS6ugonng0q9mtY5JAgCh3WMM20AZPHFfN9fev/BVT/lKB+0h/wBlS8Yf+na6r4KoA/24/wDgkH/yim/Zs/7Jj4V/9NtvX6K1+dX/AASD/wCUU37Nn/ZMfCv/AKbbev0VoA/wvf2/f+T7vjX/ANj74k/9OE9fJNfW37fv/J93xr/7H3xJ/wCnCevkmgD/AE5f+DKP/lGf8R/+ynX3/pq0uv7E6/yUP+CNv/Bxb42/4JA/s4+If2ePDfwrsfHUHiDxJP4ia9udVksHiea1trYxBFt5QQBbBt24fexjiv1x/wCI4v4rf9G7aT/4Uc3/AMhUAf6H1Ff54P8AxHF/Fb/o3bSf/Cjm/wDkKj/iOL+K3/Ru2k/+FHN/8hUAf//W/v4ooooAKKKKACiiigAooooAK/xdf+C8n/KYn9of/scLz+S1/tFV/i6/8F5P+UxP7Q//AGOF5/JaAPyRr+7H/gx3/wCSxftC/wDYG8P/APo+7r+E6v7sf+DHf/ksX7Qv/YG8P/8Ao+7oA/0R6KKKACiiigD8C/8AgsB/yU7wd/2C7j/0aK/IOv18/wCCwH/JTvB3/YLuP/Ror8gyccmv4B8X/wDkr8f6x/8ATcT+0vDT/kmcF/hl/wClyP3y/wCCQvgQad8NvFXxInjxJq2oRWMbHvFZR78j2LzEH1K+1fr9Xyf+w54D/wCFd/sq+DdFlUie6sv7Rm3DDb75jcYPuocL9Fr6purhLS2kupAzLEpchRuYhRngDqfav7M8PsqWWcN4DCtWapqT/wAUvfl+MmfyxxvmP1/P8ZiE7pzcV6R91fgkfyZ/tk+L5vFH7VnjjxFZyHfDqr20bjgg2IW3B/AxV/U/8N/Flt49+Hmg+OLP/Vazp9rfJ9LiNXH86/kw1z4OftCeJdcvfEd/4F8QifUbiW6lH9l3X35mLt1i9TX9JH7CVz4ob9lrwvpPjPTrvS9R0qOWwkt72B7eUJBKyxHZIqnBj2YOMGvxbwTx+LnxBmrxFKUY4i9W8otK6m+/W1R6eXkfrPi3gcPHJMuVGcZOhano09HBdunuI+u6KKK/ps/ns+ef2uv+TUPif/2KWtf+kctf4Rtf73XxW8CQfFL4XeJPhlc3LWcfiPSrzS3uFXe0S3kLRFwpIBKhs4yM4r+KD/iB8+Af/RffEH/gltv/AI/QB/BZ+yF/ydl8L/8AsbdE/wDSyKv93Cv4nvhZ/wAGXHwN+FvxP8OfE6x+O2u3c/hzVLPVI4JNGt1SV7OVZQjET5AYrgkV/bDQB/DZ/wAHwH/Ju3wG/wCxj1f/ANJoq/zmq/2V/wDgsv8A8Ea/BX/BYvwH4H8B+NvHN94Ih8E393fxy2NnHeNcNdRpHtYSSIFChM8ZzmvwD/4gfPgH/wBF98Qf+CW2/wDj9AHw1/wZD/8AJ1/xu/7FKw/9LK/0gq/nz/4I2/8ABAL4df8ABHj4o+Mfib4J+I+peNpPGGlQ6XLb31hFaLAsM3mh1aORySTwQQK/oMoA/wAPz/gqp/ylA/aQ/wCypeMP/TtdV8FV/pkftL/8GdHwV/aV/aQ+IP7RusfG/W9Lu/H/AIl1bxJNZQ6PBJHbPqt1LdGJWacFhGZNoYgE4zgdK8S/4gfPgH/0X3xB/wCCW2/+P0Af1Ef8Eg/+UU37Nn/ZMfCv/ptt6/RWvn/9k/4CWX7K/wCzB8O/2ZtN1J9Ztvh94c0zw7FfyxiF7lNMt0t1laMFgpcJuKhiAT1r6AoA/wAL39v3/k+741/9j74k/wDThPXyTX+lZ8cP+DMz4IfG741+MfjRqXxz1ywuPF+uajrcltHo9u6QNqFw85jDGcFgm/bkgZxnA6V5d/xA+fAP/ovviD/wS23/AMfoA/zpKK/0W/8AiB8+Af8A0X3xB/4Jbb/4/R/xA+fAP/ovviD/AMEtt/8AH6AP86Siv9Fv/iB8+Af/AEX3xB/4Jbb/AOP0f8QPnwD/AOi++IP/AAS23/x+gD//1/7+KKKKACiiigAooooAKKKKACv8XX/gvJ/ymJ/aH/7HC8/ktf7RVfyz/tgf8GnH7Dv7Zv7TnjX9qf4g/ELx1put+OdTl1W8tdPn09bWKWXGViEllI4UY43Ox96AP8p+v7sf+DHf/ksX7Qv/AGBvD/8A6Pu6/R7/AIgnf+Cdn/RUPiN/4EaZ/wDK+v13/wCCTH/BC79mv/gj/wCJvGvin4C+K/E3iOfxxa2VpeLr8lq6RJYvK6GL7PbQEEmU7txboMYoA/bKiiigAooooA/Av/gsB/yU7wd/2C7j/wBGivyu8CeErvx/440bwLY5E2tX1vYoVGSpuJFjz+G7Nfqj/wAFgP8Akp3g7/sF3H/o0V85f8E2/Av/AAm37WOiXMib4dBt7nVJQf8ApmvlIfwllQ/hX8O8c5U8y8RqmAtpUq0ov0cYXfyV2f17wjmKwHA9LG/8+6VSS9VKdvvZ/Ttp9ha6XYQaZYoI4LaNYo1HRUQYA/ACrdFfDf7c/wC1X4h/ZZ8HaHq3hGys7/UNYvXh8q9DlBBFGWdgEZDkMUHXGDX9m5zm+EynA1MfjHy0qau2leyukrJebR/KmVZXiczxlPBYVXqTel3bo27v0TPuSiv57/8Ah7t8c/8AoXNC/wC+Lj/4/X1T+xx/wUJ8d/tC/GdPhh470rTNPhurK4mt5LMSiRp4drbT5kjjHl7zwM8Dtmvg8q8YuGcxxlLA4atJ1KjUY3hJK721Z9lmPhdn+BwtTGV6ceSCcnaSbst9D9Z6KKK/UT87CiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAP//Q/v4ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAPwK/wCCwLKvxO8Hbjj/AIldx/6NFd//AMEfPAyNB4z+KEqg5e30mB/TaDNMM++6I194ftNf8h3TP+uD/wDoVehfs2f8iNd/9f8AJ/6Ljr8SwvA9N8fVM+nWva7UOXZ+zUL83Nrbfbc/YMTxZNcFU8phSteycubpzuW1uu259CV/Pz/wV58aJqPxg8L+BEfK6RpT3bDIwHvZSuMeu2BT9DX9A1fBv7QX/JRZf+uEX8q+s8TsnnmuRVMvjV5FOUbu3NonzWtddUup8z4d5lDL85jjJU+dxjKyvbVrlvez6N9D+X7zI/7w/Ovoz9kTxvH4B/ac8D+JGkCINVhtZGzjEd7m3Y/TbIc1+w9a2gf8h2y/67x/+hCv53ynwolg8dQxdPHe9TnGS/d9YyTX2/I/dMx8QIYnCVsNPC+7OMov3+jTT+x5n6lUUUV/ZJ/KIUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//Z" style="height:44px;object-fit:contain" alt="HevoFame logo">
+  </div>
+  <div class="sub">Beoordelingsmethodiek verouderd maatschappelijk vastgoed voor woonzorgconcepten</div>
+  <div class="credit">Ontwikkeld voor HevoFame &nbsp;|&nbsp; Gebaseerd op de Leefplekmeter (Gezond in…, 2018) &nbsp;|&nbsp; H.B. van Dalfzen – Hanze Vastgoedkunde, 2026</div>
+</div>
+
+<div class="meta-grid" style="grid-template-columns:repeat(3,1fr)">
+  <div class="mf"><label>Locatie / projectnaam</label><input type="text" id="locnaam" placeholder="bijv. Voorm. verzorgingstehuis De Lindenhof"></div>
+  <div class="mf"><label>Gemeente / regio</label><input type="text" id="gemeente" placeholder="bijv. Almere, Flevoland"></div>
+  <div class="mf"><label>Huidige functie</label><input type="text" id="functie" placeholder="bijv. school, zorggebouw, kantoor"></div>
+  <div class="mf"><label>Bouwjaar</label><input type="text" id="bouwjaar" placeholder="bijv. 1978"></div>
+  <div class="mf"><label>Beoordelaar</label><input type="text" id="beoordelaar" placeholder="bijv. M. Tetteroo – HevoFame"></div>
+  <div class="mf"><label>Datum</label><input type="text" id="datum"></div>
+</div>
+
+<div class="rpo-row">
+  <span class="rpo-label">Type ontwikkeling (§2.1.4)</span>
+  <button class="rpo-btn" id="rpo-0" onclick="selRPO(0)">RPO — Risicodragende projectontwikkeling</button>
+  <button class="rpo-btn" id="rpo-1" onclick="selRPO(1)">In opdracht — voor zorginstelling / corporatie</button>
+  <button class="rpo-btn" id="rpo-2" onclick="selRPO(2)">Nog onbekend</button>
+</div>
+
+<div class="rpo-banner" id="rpo-banner"><b>⚑ Aandachtspunt RPO (§2.1.4)</b>Bij risicodragende projectontwikkeling draagt HevoFame zelf verantwoordelijkheid voor risico's op het gebied van prijs, planning, kwaliteit en haalbaarheid. Een zorgvuldige beoordeling van alle indicatoren is daardoor extra belangrijk — twijfelachtige scores vertegenwoordigen een direct risico voor HevoFame als ontwikkelende partij.</div>
+
+<span class="concept-lbl">Context — Voor welk woonzorgconcept beoordeelt u deze locatie?</span>
+<div class="concept-grid">
+  <div class="cc" id="cc-0" onclick="selC(0)"><div class="ct">Beschermd wonen</div><div class="cs">Tijdelijk niet zelfstandig wonen. Begeleiding tot 24u/dag. Woningen geclusterd rondom gemeenschappelijke ruimtes (§2.4.1)</div></div>
+  <div class="cc" id="cc-1" onclick="selC(1)"><div class="ct">Wonen met een Plus</div><div class="cs">Zelfstandig wonen + aanvullende voorzieningen. Levensloopbestendig, gericht op ontmoeting en zelfredzaamheid (§2.4.2)</div></div>
+  <div class="cc" id="cc-2" onclick="selC(2)"><div class="ct">Tijdelijk te gast</div><div class="cs">Tijdelijk verblijf max. 3 maanden. Beschermde woonomgeving, ook als studio binnen Beschermd wonen (§2.4.3)</div></div>
+  <div class="cc" id="cc-3" onclick="selC(3)"><div class="ct">Combinatieconcept</div><div class="cs">Meerdere woonzorgvormen op één locatie, bijv. Beschermd wonen + Tijdelijk te gast gecombineerd.</div></div>
+</div>
+
+<div class="aandacht aan-b" id="a-0"><b>⚑ Aandachtspunten Beschermd wonen (§2.4.1)</b>Bij dit concept wegen bereikbaarheid voor (nacht)personeel en clustering rondom gemeenschappelijke ruimtes het zwaarst. Een gebouw zonder individuele buitenruimte kan juist passend zijn voor een intramurale zorgfunctie (Tetteroo, HevoFame).</div>
+<div class="aandacht aan-g" id="a-1"><b>⚑ Aandachtspunten Wonen met een Plus (§2.4.2)</b>Bij dit concept zijn nabijheid van voorzieningen ('3 A's' binnen 500m), levensloopbestendige plattegronden en buitenruimte per woning (min. 50m²) de meest bepalende indicatoren. Voldoende schaalgrootte is bepalend voor gemeenschapsvorming (Boonen, Sonneborgh).</div>
+<div class="aandacht aan-p" id="a-2"><b>⚑ Aandachtspunten Tijdelijk te gast (§2.4.3)</b>Dit concept kan worden gerealiseerd als studio's binnen Beschermd wonen, in een beschermde woonomgeving met ruimte voor zelfstandigheid en ontmoeting (HevoFame, §2.4.3).</div>
+<div class="aandacht aan-o" id="a-3"><b>⚑ Aandachtspunten Combinatieconcept</b>Bij dit concept gelden de eisen van de afzonderlijke concepten tegelijk. HevoFame hanteert de doelgroep als vertrekpunt: de doelgroep bepaalt welke indicatoren het zwaarst wegen (Tetteroo, HevoFame).</div>
+
+<div class="main-grid">
+<div class="canvas-wrap">
+  <svg id="radar" width="300" height="300" viewBox="0 0 300 300" style="overflow:visible"></svg>
+  <div class="legenda">
+    <div class="leg"><div class="dot" style="background:#E87722"></div><span style="color:#E87722;font-weight:600">Locatie</span></div>
+    <div class="leg"><div class="dot" style="background:#1A1A1A"></div><span style="color:#1A1A1A;font-weight:600">Gebouw</span></div>
+    <div class="leg"><div class="dot" style="background:#D4A96A"></div><span style="color:#D4A96A;font-weight:600">Haalbaarheid</span></div>
+  </div>
+  <div class="pills" style="margin-top:6px">
+    <div class="pill pl"><span>Locatiescore</span><strong id="ps-l">–</strong></div>
+    <div class="pill pb"><span>Gebouwscore</span><strong id="ps-b">–</strong></div>
+    <div class="pill pf"><span>Haalbaarheid</span><strong id="ps-f">–</strong></div>
+  </div>
+</div>
+
+<div>
+<div class="hint">Scoor elk thema van 1 (onvoldoende) tot 10 (uitstekend). Klik op ⓘ voor scoringsvraag en databronnen. <span id="cbadge" style="font-size:10px;padding:1px 7px;border-radius:10px;font-weight:600;background:#FAEEDA;color:#633806">Selecteer eerst een concept ↑</span></div>
+
+<div class="stap s1"><span class="nr">1</span> Locatiebeoordeling — is deze locatie geschikt voor woonzorg?</div>
+<div class="gng" id="gl"></div>
+<div class="nogo-btn" id="nb-l"><button onclick="forceNext('l')">Ik begrijp het risico — toch doorgaan naar stap 2 →</button></div>
+
+<div class="sr"><span class="sl cloc">Ligging &amp; bereikbaarheid <span class="hl" id="h0"></span></span><input type="range" min="1" max="10" value="5" id="s0" oninput="touch(0);upd()" style="accent-color:#E87722"><span class="sv cloc" id="v0">–</span><button class="ibtn" onclick="openM(0)">ⓘ</button></div>
+<div class="veilig-row"><input type="checkbox" id="veilig" onchange="chkVeilig()"><label for="veilig">⚠ De omgeving is sociaal onveilig 's avonds / 's nachts voor zorgpersoneel in nachtdienst</label></div>
+<div class="warn" id="vw">⚠ Veiligheidswaarschuwing: omgeving onveilig voor zorgpersoneel 's avonds/nachts. Belangrijk aandachtspunt voor zorglocaties (Tetteroo, HevoFame).</div>
+<div class="sr"><span class="sl cloc">Nabijheid voorzieningen <span class="hl" id="h1"></span></span><input type="range" min="1" max="10" value="5" id="s1" oninput="touch(1);upd()" style="accent-color:#E87722"><span class="sv cloc" id="v1">–</span><button class="ibtn" onclick="openM(1)">ⓘ</button></div>
+<div class="sr"><span class="sl cloc">Sociaal-demografisch profiel</span><input type="range" min="1" max="10" value="5" id="s2" oninput="touch(2);upd()" style="accent-color:#E87722"><span class="sv cloc" id="v2">–</span><button class="ibtn" onclick="openM(2)">ⓘ</button></div>
+<div class="sr"><span class="sl cloc">Zorgmarkt omgeving</span><input type="range" min="1" max="10" value="5" id="s3" oninput="touch(3);upd()" style="accent-color:#E87722"><span class="sv cloc" id="v3">–</span><button class="ibtn" onclick="openM(3)">ⓘ</button></div>
+<div class="sr"><span class="sl cloc">Doelgroep &amp; zorgzwaarte <span class="hl" id="h4"></span></span><input type="range" min="1" max="10" value="5" id="s4" oninput="touch(4);upd()" style="accent-color:#E87722"><span class="sv cloc" id="v4">–</span><button class="ibtn" onclick="openM(4)">ⓘ</button></div>
+
+<div class="stap s2"><span class="nr">2</span> Gebouwbeoordeling — is transformatie haalbaar?</div>
+<div class="gng" id="gb"></div>
+<div class="nogo-btn" id="nb-b"><button onclick="forceNext('b')">Ik begrijp het risico — toch doorgaan naar stap 3 →</button></div>
+
+<div class="sr"><span class="sl cbouw">Technische staat</span><input type="range" min="1" max="10" value="5" id="s5" oninput="touch(5);upd()" style="accent-color:#1A1A1A"><span class="sv cbouw" id="v5">–</span><button class="ibtn" onclick="openM(5)">ⓘ</button></div>
+<div class="sr"><span class="sl cbouw">Constructie &amp; beukmaat <span style="font-size:8px;background:#FCEBEB;color:#501313;padding:1px 4px;border-radius:6px;font-weight:700">⚠ veto</span></span><input type="range" min="1" max="10" value="5" id="s6" oninput="touch(6);upd()" style="accent-color:#1A1A1A"><span class="sv cbouw" id="v6">–</span><button class="ibtn" onclick="openM(6)">ⓘ</button></div>
+<div class="veto-warn" id="vtw">⚠ Vetovereiste: constructie scoort onvoldoende (≤4) — transformatie vrijwel onhaalbaar. Nader bouwkundig onderzoek vereist of overweeg sloop/nieuwbouw. (Sonneborgh + Centrada, veldwerkonderzoek)</div>
+<div class="sr"><span class="sl cbouw">Energielabel &amp; duurzaamheid</span><input type="range" min="1" max="10" value="5" id="s7" oninput="touch(7);upd()" style="accent-color:#1A1A1A"><span class="sv cbouw" id="v7">–</span><button class="ibtn" onclick="openM(7)">ⓘ</button></div>
+<div class="sr"><span class="sl cbouw">Functionele indeling <span class="hl" id="h8"></span></span><input type="range" min="1" max="10" value="5" id="s8" oninput="touch(8);upd()" style="accent-color:#1A1A1A"><span class="sv cbouw" id="v8">–</span><button class="ibtn" onclick="openM(8)">ⓘ</button></div>
+
+<div class="stap s3"><span class="nr">3</span> Haalbaarheid — kan het project worden gerealiseerd?</div>
+
+<div class="sr"><span class="sl cfin">Financiële haalbaarheid</span><input type="range" min="1" max="10" value="5" id="s9" oninput="touch(9);upd()" style="accent-color:#D4A96A"><span class="sv cfin" id="v9">–</span><button class="ibtn" onclick="openM(9)">ⓘ</button></div>
+<div class="warn" id="jw">△ Planologische waarschuwing: de route vereist extra tijd en kosten. Dit betekent niet dat het project onhaalbaar is. Houd rekening met langere doorlooptijd. (ERA Contour: "We zoeken de weg van de minste weerstand.")</div>
+<div class="sr"><span class="sl cfin">Juridisch-planologisch</span><input type="range" min="1" max="10" value="5" id="s10" oninput="touch(10);upd()" style="accent-color:#D4A96A"><span class="sv cfin" id="v10">–</span><button class="ibtn" onclick="openM(10)">ⓘ</button></div>
+<div class="sr"><span class="sl cfin">Organisatorische haalbaarheid</span><input type="range" min="1" max="10" value="5" id="s11" oninput="touch(11);upd()" style="accent-color:#D4A96A"><span class="sv cfin" id="v11">–</span><button class="ibtn" onclick="openM(11)">ⓘ</button></div>
+
+<div class="rbox">
+  <div class="rtitle">Resultaten</div>
+  <div class="rr"><span class="rl">Type ontwikkeling</span><span class="rv" id="r-rpo">–</span></div>
+  <div class="rr"><span class="rl">Woonzorgconcept</span><span class="rv" id="r-con">–</span></div>
+  <div class="rr"><span class="rl">Locatiescore (stap 1)</span><span class="rv" id="r-l">–</span></div>
+  <div class="rr"><span class="rl">Gebouwscore (stap 2)</span><span class="rv" id="r-b">–</span></div>
+  <div class="rr"><span class="rl">Haalbaarheidsscore (stap 3)</span><span class="rv" id="r-f">–</span></div>
+  <div class="rr"><span class="rl">Locatie geschikt voor woonzorg?</span><span class="rv" id="r-lu">–</span></div>
+  <div class="rr"><span class="rl">Transformatie haalbaar?</span><span class="rv" id="r-t">–</span></div>
+  <div class="ea" id="ea"></div>
+</div>
+<div class="btn-row">
+  <button class="btn btn-sec" onclick="resetAll()">↺ Opnieuw beginnen</button>
+  <button class="btn btn-prim" onclick="window.print()">⎙ Printen / opslaan als PDF</button>
+</div>
+</div>
+</div>
+<div class="footer">SamenLeefKompas v1.0 | HevoFame 2026 | H.B. van Dalfzen – Hanze Vastgoedkunde | Gebaseerd op bureauonderzoek (literatuurstudie) en veldwerkonderzoek (6 expertinterviews)</div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="mo" onclick="if(event.target===this)closeM()">
+<div class="modal">
+  <button class="mclose" onclick="closeM()">✕</button>
+  <h3 id="mt"></h3>
+  <div class="vraag" id="mq"></div>
+  <div class="toel" id="ml"></div>
+  <div class="bron" id="mb"></div>
+  <div class="links-title">Databronnen</div>
+  <div class="links" id="mk"></div>
+</div>
+</div>
+
+<script>
+// ── RPO ──
+let rpoSel = -1;
+const rpoNames = ['RPO — Risicodragende projectontwikkeling', 'In opdracht — voor zorginstelling / corporatie', 'Nog onbekend'];
+function selRPO(i){
+  rpoSel = i;
+  for(let j=0;j<3;j++) document.getElementById('rpo-'+j).className = 'rpo-btn' + (j===i?' active':'');
+  document.getElementById('r-rpo').textContent = rpoNames[i];
+  document.getElementById('rpo-banner').style.display = i===0 ? 'block' : 'none';
+}
+
+// ── DATA ──
+const N=12;
+const touched=new Array(N).fill(false);
+const grp={l:[0,1,2,3,4],b:[5,6,7,8],f:[9,10,11]};
+const cNames=['Beschermd wonen','Wonen met een Plus','Tijdelijk te gast','Combinatieconcept'];
+const cSel=['sel-b','sel-g','sel-p','sel-o'];
+const cBg=['#FDF0E2','#E8E8E8','#FDF6E3','#FDF0E6'];
+const cClr=['#7A3200','#ffffff','#7A4A00','#7A3208'];
+const hlCls=['hl-b','hl-g','hl-p','hl-o'];
+const hls=[{0:'! personeel',4:'! zorgzwaar',8:'! volume'},{1:"! 3 A's",4:'! doelgroep',8:'! levensloop'},{0:'! bereikbaar',4:'! doelgroep',8:'! studio'},{0:'! personeel',1:"! 3 A's",4:'! doelgroep',8:'! flex'}];
+let sc=-1, fL=false, fB=false;
+
+const MD=[
+  {t:'Ligging & bereikbaarheid',q:'Hoe goed is de OV-bereikbaarheid voor bewoners én zorgpersoneel, en ligt de locatie in een woonwijk? Beoordeel de sociale veiligheid apart via de checkbox hieronder.',e:'Ligging t.o.v. woonwijk, OV-bereikbaarheid en sociale veiligheid zijn bepalend voor de geschiktheid voor woonzorg. Zorgpersoneel moet ook \'s avonds en \'s nachts veilig de locatie kunnen bereiken.',b:'Alle 6 respondenten. Coloriet (Woortman): "Ligging is cruciaal." Sonneborgh (Boonen): "Locatie is altijd belangrijker." HevoFame (Tetteroo): "Veilig als mensen \'s avonds op de fiets komen voor nachtdienst."',l:[['Google Maps – looproutes en OV','https://maps.google.com'],['Leefbaarometer – veiligheidsscore per buurt','https://www.leefbaarometer.nl'],['9292 – OV-bereikbaarheid','https://9292.nl']]},
+  {t:'Nabijheid voorzieningen',q:'Zijn minimaal 2 van de 4 basisvoorzieningen (supermarkt, huisarts, apotheek, OV-halte) binnen 500 meter aanwezig? Let op: de norm is doelgroepafhankelijk — bij zwaardere zorg zijn voorzieningen meer voor bezoek dan voor bewoners zelf.',e:'HevoFame hanteert de "3 A\'s": apotheek, Albert Heijn en arts, waarbij de supermarkt bij voorkeur binnen 500 meter loopafstand zit. Centrada: nabijheid van winkels en medische voorzieningen per doelgroep beoordelen. Sonneborgh: bij dementie zijn voorzieningen meer voor bezoek. Coloriet: ook OV-bereikbaarheid meenemen.',b:'Alle 6 respondenten. HevoFame (Tetteroo): "Apotheek, Albert Heijn, arts — de 3 A\'s, supermarkt binnen 500m." Sonneborgh (Boonen): "Bij dementie meer voor bezoek dan voor bewoners." Centrada (Overwijk): "Voorzieningenniveau per doelgroep beoordelen." Coloriet (Woortman): "Bereikbaarheid en OV."',l:[['CBS Nabijheidsstatistieken per buurt','https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/wijk-en-buurtstatistieken/nabijheidsstatistieken-per-wijk-buurt'],['CBS Cijfers op de Kaart – interactieve kaart','https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/cijfers-op-de-kaart'],['Google Maps – afstand tot voorzieningen','https://maps.google.com']]},
+  {t:'Sociaal-demografisch profiel',q:'Heeft de wijk een groeiend aandeel ouderen, een inkomensniveau passend bij het beoogde concept, en een positieve leefbaarheidsscore?\n\n8–10: Sterk groeiend aandeel ouderen, inkomen past goed bij concept, hoge leefbaarheidsscore.\n6–7: Profiel past redelijk bij concept, enkele aandachtspunten.\n4–5: Inkomen of leefbaarheid twijfelachtig — nader onderzoek nodig.\n1–3: Profiel past niet bij concept of leefbaarheidsscore is negatief.',e:'De demografische samenstelling bepaalt de potentiële doelgroep én de financiële haalbaarheid. In een vermogende wijk kun je groter en duurder bouwen. ERA Contour maakt altijd eerst een wijkscan als eerste onderzoek.',b:'ERA Contour (Boon): "Dat is het eerste onderzoek dat we doen." Sonneborgh (Boonen): "In Oosterbeek groter en duurder; in Hoogvliet binnen liberalisatiegrens." HevoFame (Tetteroo): demografische ontwikkelingen meenemen.',l:[['CBS Cijfers op de Kaart – leeftijd, inkomen','https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/cijfers-op-de-kaart'],['AlleCijfers.nl – snelle buurtanalyse','https://allecijfers.nl'],['Leefbaarometer – leefbaarheidsscore','https://www.leefbaarometer.nl']]},
+  {t:'Zorgmarkt omgeving',q:'Is er in de regio meer vraag dan aanbod aan woonzorgplekken, en is het zorgkantoor bereid te contracteren voor het beoogde concept?\n\n8–10: Duidelijk tekort aan woonzorgplekken in de regio, markt is kansrijk.\n6–7: Vraag groeit maar aanbod is nog aanwezig — markt is in beweging.\n4–5: Onduidelijk beeld, moeilijk te beoordelen zonder nader onderzoek.\n1–3: Overcapaciteit of markt is ongunstig voor het beoogde concept.',e:'De zorgmarkt in de omgeving bepaalt of er ruimte is voor een nieuw concept. Sonneborgh kijkt altijd naar de zorgverzekeraar en beschikbaar budget. Door langer thuis wonen verschuift de vraag.',b:'Sonneborgh (Boonen): "Kijken naar de zorgmarkt, wie de zorgverzekeraar is." Coloriet (Woortman): "Hoe zien wij het aantal beschikbare bedden en de toekomst?" Inductieve vondst veldwerkonderzoek.',l:[['Regiomonitor ZN – capaciteit verpleegzorg','https://www.zn.nl/zorgkantoren/over-zorgkantoren/capaciteit-van-de-verpleegzorg/'],['WoonZorgwijzer – zorgvraag per wijk','https://www.woonzorgwijzer.nl'],['Regiobeeld.nl – zorggebruik per regio','https://www.regiobeeld.nl']]},
+  {t:'Doelgroep & zorgzwaarte',q:'Past de locatie qua uitstraling, omgeving en bereikbaarheid bij de beoogde doelgroep en het gekozen woonzorgconcept?',e:'De zorgzwaarte bepaalt de eisen aan de locatie. Mensen met dementie hebben andere eisen dan mensen die zelfstandig wonen met ondersteuning. HevoFame begint altijd met: "Voor wie zijn wij hier?"',b:'HevoFame (Tetteroo): "We beginnen met de doelgroep — voor wie zijn wij hier?" Centrada (Overwijk): "Zorgzwaarte heeft invloed op de parkeernorm." Coloriet (Woortman): doelgroep per locatie beoordelen.',l:[['WoonZorgwijzer – doelgroepen per wijk','https://www.woonzorgwijzer.nl'],['CBS Cijfers op de Kaart – aandeel ouderen','https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/cijfers-op-de-kaart']]},
+  {t:'Technische staat',q:'Wat is de bouwtechnische conditie van het gebouw — zijn er grote gebreken, hoge onderhoudskosten of een korte resterende levensduur van het casco?',e:'De technische staat is voor de meeste respondenten de eerste indicator bij gebouwbeoordeling. HevoFame hanteert het 7S-model van Re-born: locatie 200 jaar, casco 100 jaar, schil 50 jaar, installaties 25 jaar.',b:'Alle 6 respondenten. Centrada (Overwijk): "Eerste indicator is de technische kwaliteit." ERA Contour (Boon): "We beginnen altijd met technische beoordeling." HevoFame (Tetteroo): "7S-model — casco blijft het langst staan."',l:[['BAG Viewer – bouwjaar en pandgegevens','https://bagviewer.kadaster.nl'],['Planviewer – pandinfo','https://www.planviewer.nl']]},
+  {t:'Constructie & beukmaat ⚠ VETOVEREISTE',q:'Is de hoofddraagconstructie intact en zijn de beukmaat en verdiepingshoogte geschikt voor woonzorgplattegronden zonder ingrijpende structuurwijzigingen?\n\n⚠ VETOVEREISTE: score ≤ 4 geeft automatisch een rode waarschuwing — transformatie is dan vrijwel onhaalbaar ongeacht andere scores.',e:'Als de constructie niet intact kan blijven is transformatie vrijwel altijd onhaalbaar. Stramienmaat bepaalt of studio\'s samengevoegd kunnen worden of badkamers ingepast zonder de draagstructuur te raken.',b:'Sonneborgh (Boonen): "Het allerbelangrijkste is de constructie en de stramienmaat." Centrada (Overwijk): "Als je dragende elementen moet weghalen is de lak duurder dan de brief." HevoFame (Tetteroo): "Beukmaat en verdiepingshoogte zijn het meest doorslaggevend."',l:[['BAG Viewer – bouwjaar en structuur','https://bagviewer.kadaster.nl'],['Planviewer – pandgegevens','https://www.planviewer.nl']]},
+  {t:'Energielabel & duurzaamheid',q:'Is het huidige energielabel A, of zijn de investeringen om label A te bereiken financieel haalbaar binnen de businesscase?\n\n⚠ Drempelwaarde: label A is vereist voor bankfinanciering. Eindbeleggers eisen BENG 50%-garantie.',e:'Energielabel A is niet alleen een duurzaamheidseis maar ook een harde financieringsvoorwaarde. Bij bestaand vastgoed is BENG 50% lastig te halen, wat de kring van potentiële beleggers verkleint.',b:'Sonneborgh (Boonen): "Banken financieren alleen label A." En: "Eindbeleggers willen BENG 50% garantie." HevoFame (Tetteroo): "Energielabel — kijk naar de schil van het gebouw."',l:[['EP-online – energielabel opzoeken per adres (woningen én utiliteit)','https://www.ep-online.nl']]},
+  {t:'Functionele indeling',q:'Zijn de bestaande plattegronden geschikt of eenvoudig aanpasbaar voor het gekozen woonzorgconcept, inclusief eventuele buitenruimte of gemeenschappelijke ruimtes?',e:'Een dieper gebouw is minder geschikt voor wonen (geen buitenruimte per woning) maar juist geschikter voor zwaardere zorg. Buitenruimte is vereist bij wonen (≥50m²) maar minder kritisch bij intramurale zorg.',b:'Centrada (Overwijk): "Passen de plattegronden nog bij de eisen van deze tijd?" HevoFame (Tetteroo): "Dieper gebouw geschikter voor zorg." Coloriet (Woortman): transformatievoorbeeld met kleinschalige woonvormen.',l:[['Planviewer – indeling en oppervlakte','https://www.planviewer.nl'],['BAG Viewer – pandgegevens','https://bagviewer.kadaster.nl']]},
+  {t:'Financiële haalbaarheid',q:'Maak een eerste globale inschatting op basis van kerngetallen en referentieprojecten: is de verwachte businesscase kansrijk?\n\nLet op: dit is een vroege verkenning, geen definitieve berekening.\n\n8–10: Businesscase lijkt positief.\n6–7: Kansrijk maar onzeker — nader onderzoek aanbevolen.\n4–5: Twijfelachtig — grote investeringen of lage opbrengsten.\n1–3: Businesscase lijkt negatief op basis van eerste inschatting.',e:'Financiële haalbaarheid is het sluitstuk. HevoFame werkt met kerngetallen en referentieprojecten via het Bouwkostenkompas. Sonneborgh: "70% van de overwegingen zijn financieel ingestoken." Verdichtingspotentie is bepalend.',b:'Alle 6 respondenten. Sonneborgh (Boonen): "70% financieel." HevoFame (Tetteroo): "Globaal rekenen op kerngetallen en het Bouwkostenkompas." Centrada (Overwijk): "Excel-model met wegingsfactoren."',l:[['RVO Nationaal Transformatieloket','https://www.rvo.nl/onderwerpen/expertteam-woningbouw/nationaal-transformatie-loket'],['Bouwkostenkompas – referentieprojecten','https://www.bouwkostenkompas.nl']]},
+  {t:'Juridisch-planologisch',q:'Hoe kansrijk is de planologische route? Een lage score betekent niet dat het project onhaalbaar is — bijna elke transformatie vereist een procedure.\n\n8–10: Past al binnen omgevingsplan, geen bezwaren verwacht.\n6–7: Kleine aanpassing nodig, gemeente positief.\n4–5: Omgevingsplanwijziging nodig, traject 1–2 jaar.\n1–3: Verwachting dat gemeente terughoudend of negatief zal zijn, en/of mogelijke complicaties zoals erfpacht of bodemvervuiling.',e:'Het omgevingsplan (Omgevingswet, 1 jan 2024) vervangt het bestemmingsplan. ERA Contour: "We zoeken de weg van de minste weerstand, maar een procedure is nooit een reden om niet door te gaan." Let op blokkerende factoren.',b:'ERA Contour (Boon): "We zoeken de weg van de minste weerstand." Gemeente Almere: "Financieel haalbaar en passend binnen stedelijke programmering." Sonneborgh (Boonen): "Erfpacht, asbest, bodemvervuiling — dat zijn de risico\'s."',l:[['Omgevingsloket – omgevingsplan per adres','https://omgevingsloket.nl'],['Bodemloket – bodemverontreiniging','https://www.bodemloket.nl'],['Planviewer – vergunningen','https://www.planviewer.nl']]},
+  {t:'Organisatorische haalbaarheid',q:'Zijn de betrokken partijen (eigenaar, zorginstelling, corporatie, gemeente) bereid én in staat samen te werken binnen een realistisch tijdpad?\n\n8–10: Eigenaar bekend en open voor samenwerking, investerende partij (corporatie/belegger) in beeld.\n6–7: Eigenaar benaderbaar, investerende partij nog niet concreet maar context kansrijk.\n4–5: Eigenaar onbekend of terughoudend, investerende partij onduidelijk.\n1–3: Eigenaar niet bereid te verkopen of samen te werken, geen investeerder in beeld.',e:'Beoordeel wie er uiteindelijk in het project investeert — vaak een woningcorporatie of eindbelegger — en of die partij bereid is deel te nemen.',b:'Coloriet (Woortman): "Stuurgroep met bestuurder, zorgdirecteur en concerncontroller." HevoFame (Tetteroo): "Wie gaat hier uiteindelijk in investeren?" Sonneborgh (Boonen): "Strategische horizon bepaalt de richting."',l:[['HevoFame – Van wonen naar samen leven (2026)','https://www.hevo.nl/hevofame/actueel/nieuws-en-events/vanwonen-naar-samenleven']]}
+];
+
+// ── RADAR SVG ──
+const CX=150,CY=150,RM=105;
+const LBLS=['Ligging','Voorzieningen','Soc.-demogr.','Zorgmarkt','Doelgroep','Technisch','Constructie','Energie','Functioneel','Financieel','Juridisch','Organisatie'];
+const ANGS=Array.from({length:12},(_,i)=>Math.PI/2-2*Math.PI*i/12);
+
+function pt(i,s){return{x:CX+RM*s/10*Math.cos(ANGS[i]),y:CY-RM*s/10*Math.sin(ANGS[i])};}
+
+function drawRadar(scores){
+  const svg=document.getElementById('radar');
+  svg.innerHTML='';
+  const ns=(tag,a={})=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));return e;};
+  // Grid
+  [2,4,6,8,10].forEach(r=>{
+    const pts=ANGS.map(a=>`${CX+RM*r/10*Math.cos(a)},${CY-RM*r/10*Math.sin(a)}`).join(' ');
+    svg.appendChild(ns('polygon',{points:pts,fill:'none',stroke:r===10?'#ccc':'#e8e6e0','stroke-width':'1'}));
+  });
+  // Spokes
+  ANGS.forEach(a=>{svg.appendChild(ns('line',{x1:CX,y1:CY,x2:CX+RM*Math.cos(a),y2:CY-RM*Math.sin(a),stroke:'#e0ded8','stroke-width':'1'}));});
+  // Ring labels
+  [5,10].forEach(r=>{const t=ns('text',{x:CX+4,y:CY-RM*r/10+4,'font-size':'8',fill:'#bbb','text-anchor':'start'});t.textContent=r;svg.appendChild(t);});
+  // Data
+  const groups=[{idx:[0,1,2,3,4],c:'#E87722',f:'rgba(232,119,34,0.18)'},{idx:[5,6,7,8],c:'#1A1A1A',f:'rgba(26,26,26,0.12)'},{idx:[9,10,11],c:'#D4A96A',f:'rgba(212,169,106,0.20)'}];
+  groups.forEach(g=>{
+    const pts=g.idx.map(i=>{const p=pt(i,scores[i]||0);return`${p.x},${p.y}`;}).join(' ');
+    svg.appendChild(ns('polygon',{points:pts,fill:g.f,stroke:g.c,'stroke-width':'2'}));
+    g.idx.forEach(i=>{const p=pt(i,scores[i]||0);svg.appendChild(ns('circle',{cx:p.x,cy:p.y,r:'4',fill:g.c}));});
+  });
+  // Labels
+  ANGS.forEach((a,i)=>{
+    const lx=CX+(RM+20)*Math.cos(a),ly=CY-(RM+20)*Math.sin(a);
+    const t=ns('text',{x:lx,y:ly,'text-anchor':'middle','dominant-baseline':'central','font-size':'9',fill:'#5F5E5A','font-family':'Segoe UI,Arial,sans-serif'});
+    t.textContent=LBLS[i];svg.appendChild(t);
+  });
+}
+
+// ── LOGICA ──
+function touch(i){touched[i]=true;document.getElementById('v'+i).textContent=document.getElementById('s'+i).value;}
+
+function getScores(){return Array.from({length:N},(_,i)=>touched[i]?parseInt(document.getElementById('s'+i).value):0);}
+
+function avg(idx){const f=idx.filter(i=>touched[i]);if(f.length<idx.length)return null;return f.reduce((s,i)=>s+parseInt(document.getElementById('s'+i).value),0)/f.length;}
+
+function lbl(v,t){if(v===null)return'–';if(t==='l')return v>=7?'✓ Geschikt':v>=5?'△ Mogelijk geschikt':'✗ Niet geschikt';return v>=7?'✓ Haalbaar':v>=5?'△ Beperkt haalbaar':'✗ Niet haalbaar';}
+
+function gng(id,nid,v,type,forced){
+  const el=document.getElementById(id),nb=document.getElementById(nid);
+  if(v===null){el.style.display='none';nb.style.display='none';return;}
+  let cls,txt,btn=false;
+  if(type==='l'){if(v>=7){cls='go';txt='✓ GO — Locatie scoort voldoende ('+v.toFixed(1)+'). Ga door naar stap 2.';}else if(v>=5){cls='maybe';txt='△ NADER ONDERZOEK — Locatie twijfelachtig ('+v.toFixed(1)+').';}else{cls='nogo';txt='✗ NO-GO — Locatie scoort onvoldoende ('+v.toFixed(1)+').';btn=!forced;}}
+  else{if(v>=7){cls='go';txt='✓ GO — Gebouw geschikt ('+v.toFixed(1)+'). Ga door naar stap 3.';}else if(v>=5){cls='maybe';txt='△ NADER ONDERZOEK — Transformatie mogelijk ('+v.toFixed(1)+').';}else{cls='nogo';txt='✗ NO-GO — Gebouw ongeschikt voor transformatie ('+v.toFixed(1)+').';btn=!forced;}}
+  el.className='gng '+cls;el.textContent=txt;el.style.display='block';
+  nb.style.display=btn?'block':'none';
+}
+
+function upd(){
+  const scores=getScores();
+  drawRadar(scores);
+  const ls=avg(grp.l),bs=avg(grp.b),fs=avg(grp.f);
+  const veto=touched[6]&&parseInt(document.getElementById('s6').value)<=4;
+  const jurScore=touched[10]?parseInt(document.getElementById('s10').value):null;
+  document.getElementById('ps-l').textContent=ls!==null?ls.toFixed(1):'–';
+  document.getElementById('ps-b').textContent=bs!==null?bs.toFixed(1):'–';
+  document.getElementById('ps-f').textContent=fs!==null?fs.toFixed(1):'–';
+  document.getElementById('r-l').textContent=ls!==null?ls.toFixed(1)+' / 10':'–';
+  document.getElementById('r-b').textContent=bs!==null?bs.toFixed(1)+' / 10':'–';
+  document.getElementById('r-f').textContent=fs!==null?fs.toFixed(1)+' / 10':'–';
+  document.getElementById('r-lu').textContent=lbl(ls,'l');
+  document.getElementById('r-t').textContent=lbl(bs,'t');
+  gng('gl','nb-l',ls,'l',fL);
+  gng('gb','nb-b',bs,'b',fB);
+  document.getElementById('vtw').style.display=veto?'block':'none';
+  document.getElementById('jw').style.display=(jurScore!==null&&jurScore<=5)?'block':'none';
+  const all=Object.values(grp).flat().every(i=>touched[i]);
+  const ea=document.getElementById('ea');
+  if(all||veto){
+    let txt,cls;
+    if(veto){txt='⚠ Vetovereiste constructie niet gehaald — transformatie vrijwel onhaalbaar.';cls='ea-red';}
+    else if(ls>=7&&bs>=7&&fs>=7){txt='Transformatie sterk aanbevolen — locatie, gebouw én haalbaarheid voldoende.';cls='ea-green';}
+    else if(ls>=7&&bs>=5&&fs>=5){txt='Locatie kansrijk — nader onderzoek gebouw en haalbaarheid aanbevolen.';cls='ea-blue';}
+    else if(ls>=7&&(bs<5||fs<5)){txt='Goede locatie — transformatie niet haalbaar. Overweeg sloop/nieuwbouw.';cls='ea-amber';}
+    else if(ls>=5&&bs>=5&&fs>=5){txt='Beperkte kansen — voorzichtig nader onderzoek nodig.';cls='ea-amber';}
+    else{txt='Onvoldoende scores — niet kansrijk op huidige basis.';cls='ea-red';}
+    ea.className='ea '+cls;ea.textContent=txt;ea.style.display='block';
+  }else ea.style.display='none';
+}
+
+function selC(i){
+  sc=i;fL=false;fB=false;
+  for(let j=0;j<4;j++)document.getElementById('cc-'+j).className='cc'+(j===i?' '+cSel[i]:'');
+  document.querySelectorAll('.aandacht').forEach(e=>e.style.display='none');
+  document.getElementById('a-'+i).style.display='block';
+  const b=document.getElementById('cbadge');b.textContent=cNames[i];b.style.background=cBg[i];b.style.color=cClr[i];
+  for(let j=0;j<N;j++){const h=document.getElementById('h'+j);if(h){h.textContent='';h.className='hl';}}
+  Object.entries(hls[i]).forEach(([k,v])=>{const h=document.getElementById('h'+k);if(h){h.textContent=v;h.className='hl '+hlCls[i];}});
+  document.getElementById('r-con').textContent=cNames[i];
+  upd();
+}
+
+function forceNext(t){if(t==='l')fL=true;else fB=true;upd();}
+function chkVeilig(){document.getElementById('vw').style.display=document.getElementById('veilig').checked?'block':'none';}
+
+function openM(i){
+  const d=MD[i];
+  document.getElementById('mt').textContent=d.t;
+  document.getElementById('mq').textContent=d.q;
+  document.getElementById('ml').textContent=d.e;
+  document.getElementById('mb').textContent=d.b;
+  document.getElementById('mk').innerHTML=d.l.map(([t,u])=>`<a href="${u}" target="_blank">${t}</a>`).join('');
+  document.getElementById('mo').classList.add('open');
+}
+function closeM(){document.getElementById('mo').classList.remove('open');}
+
+function resetAll(){
+  sc=-1;fL=false;fB=false;touched.fill(false);
+  for(let i=0;i<4;i++)document.getElementById('cc-'+i).className='cc';
+  document.querySelectorAll('.aandacht').forEach(e=>e.style.display='none');
+  for(let i=0;i<N;i++){document.getElementById('s'+i).value=5;document.getElementById('v'+i).textContent='–';const h=document.getElementById('h'+i);if(h)h.textContent='';}
+  ['ps-l','ps-b','ps-f','r-l','r-b','r-f','r-lu','r-t','r-con'].forEach(id=>document.getElementById(id).textContent='–');
+  document.getElementById('ea').style.display='none';
+  document.getElementById('vtw').style.display='none';
+  document.getElementById('vw').style.display='none';
+  document.getElementById('jw').style.display='none';
+  document.getElementById('veilig').checked=false;
+  rpoSel=-1;
+  for(let j=0;j<3;j++) document.getElementById('rpo-'+j).className='rpo-btn';
+  document.getElementById('r-rpo').textContent='–';
+  document.getElementById('rpo-banner').style.display='none';
+  ['gl','gb','nb-l','nb-b'].forEach(id=>document.getElementById(id).style.display='none');
+  const b=document.getElementById('cbadge');b.textContent='Selecteer eerst een concept ↑';b.style.background='#FAEEDA';b.style.color='#633806';
+  drawRadar(new Array(N).fill(0));
+}
+
+// Init
+const d=new Date();
+document.getElementById('datum').value=d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();
+drawRadar(new Array(N).fill(0));
+</script>
+</body>
+</html>
