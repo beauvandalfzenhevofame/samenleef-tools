@@ -288,10 +288,25 @@ function drawRadar(scores){
   // Data
   const groups=[{idx:[0,1,2,3,4],c:'#E87722',f:'rgba(232,119,34,0.18)'},{idx:[5,6,7,8],c:'#1A1A1A',f:'rgba(26,26,26,0.12)'},{idx:[9,10,11],c:'#D4A96A',f:'rgba(212,169,106,0.20)'}];
   groups.forEach(g=>{
-    const pts=g.idx.map(i=>{const p=pt(i,scores[i]||0);return`${p.x},${p.y}`;}).join(' ');
-    svg.appendChild(ns('polygon',{points:pts,fill:g.f,stroke:g.c,'stroke-width':'2'}));
-    g.idx.forEach(i=>{const p=pt(i,scores[i]||0);svg.appendChild(ns('circle',{cx:p.x,cy:p.y,r:'4',fill:g.c}));});
+    const pts=`${CX},${CY} `+g.idx.map(i=>{const p=pt(i,scores[i]||0);return`${p.x},${p.y}`;}).join(' ');
+    const poly=ns('polygon',{points:pts,fill:g.f,stroke:g.c,'stroke-width':'2'});
+    poly.style.transformOrigin=`${CX}px ${CY}px`;
+    poly.style.transform='scale(0)';
+    poly.style.transition='transform .5s cubic-bezier(.22,.61,.36,1)';
+    svg.appendChild(poly);
+    g.idx.forEach(i=>{
+      const p=pt(i,scores[i]||0);
+      const c=ns('circle',{cx:p.x,cy:p.y,r:'4',fill:g.c});
+      c.style.transformOrigin=`${CX}px ${CY}px`;
+      c.style.transform='scale(0)';
+      c.style.transition='transform .5s cubic-bezier(.22,.61,.36,1)';
+      svg.appendChild(c);
+    });
   });
+  // Web vormt zich altijd vanuit de kern
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    svg.querySelectorAll('polygon,circle').forEach(el=>{el.style.transform='scale(1)';});
+  }));
   // Labels
   ANGS.forEach((a,i)=>{
     const lx=CX+(RM+20)*Math.cos(a),ly=CY-(RM+20)*Math.sin(a);
